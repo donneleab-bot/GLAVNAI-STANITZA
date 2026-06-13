@@ -6,11 +6,41 @@
   <title>My Pride Slider</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body, html { width: 100%; height: 100%; overflow: hidden; background: #1a1515; }
+    
+    /* СДЕЛАЛИ ФОН ПОЛНОСТЬЮ ПРОЗРАЧНЫМ */
+    body, html { width: 100%; height: 100%; overflow: hidden; background: transparent; }
+    
     .slider-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
-    .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out; display: flex; justify-content: center; align-items: center; }
+    
+    .slide { 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      opacity: 0; 
+      /* МЕДЛЕННОЕ ПЛАВНОЕ РАСТВОРЕНИЕ (2 СЕКУНДЫ) */
+      transition: opacity 2s ease-in-out; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+    }
+    
     .slide.active { opacity: 1; }
-    .slide img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .slide img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover; 
+      /* ЭФФЕКТ МЕДЛЕННОГО НАЕЗДА КАМЕРЫ */
+      transform: scale(1);
+      transition: transform 7s ease-in-out;
+    }
+
+    /* Когда слайд активен, картинка начинает медленно увеличиваться */
+    .slide.active img {
+      transform: scale(1.08);
+    }
   </style>
 </head>
 <body>
@@ -19,31 +49,35 @@
 
     <!-- СЛАЙД 1 -->
     <div class="slide active">
-      <img src="НовыйХолст4ываываываывфывlllgfdgfgфывыфвфывыфвфывфывыфваыфвавыапфыв.png">
+      <img src="СЮДА_ПИШИ_НАЗВАНИЕ_ПЕРВОЙ_КАРТИНКИ.jpg" alt="Арт 1">
     </div>
 
     <!-- СЛАЙД 2 -->
     <div class="slide">
-      <img src="НовыйХолст4ываываываывфывlllgfdgfgфывыфвфывыфвфывфывыфваыфвавыап.png">
+      <img src="СЮДА_ПИШИ_НАЗВАНИЕ_ВТОРОЙ_КАРТИНКИ.png" alt="Арт 2">
     </div>
 
     <!-- СЛАЙД 3 -->
     <div class="slide">
-      <img src="НовыйХолст4ываываываывфывlllgfdgfgфывыфвфывыфвфывфывыфваыфва.png" alt="Арт 3">
+      <img src="СЮДА_ПИШИ_НАЗВАНИЕ_ТРЕТЬЕЙ_КАРТИНКИ.jpg" alt="Арт 3">
     </div>
-
-    <!-- ЕСЛИ НУЖНО БОЛЬШЕ СЛАЙДОВ, ПРОСТО СКОПИРУЙ СТРОЧКИ НИЖЕ СКОЛЬКО УГОДНО РАЗ: -->
-    <!-- <div class="slide"><img src="НАЗВАНИЕ_КАРТИНКИ.jpg" alt="Арт"></div> -->
 
   </div>
 
   <script>
     const slides = document.querySelectorAll('.slide');
     let currentIndex = 0;
-    const slideInterval = 4000; // 4 СЕКУНДЫ НА КАЖДЫЙ АРТ (МОЖНО ИЗМЕНИТЬ)
+    
+    /* ВРЕМЯ ПОКАЗА: 7000 миллисекунд = 7 СЕКУНД (КАРТИНКА СМЕНЯЕТСЯ МЕДЛЕННЕЕ) */
+    const slideInterval = 7000; 
 
     function nextSlide() {
+      // Сбрасываем масштаб у уходящего слайда
+      const currentImg = slides[currentIndex].querySelector('img');
+      
       slides[currentIndex].classList.remove('active');
+      if (currentImg) currentImg.style.transform = 'scale(1)';
+
       currentIndex = (currentIndex + 1) % slides.length;
       slides[currentIndex].classList.add('active');
     }

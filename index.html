@@ -6,9 +6,7 @@
   <title>My Pride Slider</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    /* СДЕЛАЛИ ФОН ПОЛНОСТЬЮ ПРОЗРАЧНЫМ */
-    body, html { width: 100%; height: 100%; overflow: hidden; background: transparent; }
+    body, html { width: 100%; height: 100%; overflow: hidden; background: transparent; cursor: pointer; }
     
     .slider-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
     
@@ -19,7 +17,6 @@
       width: 100%; 
       height: 100%; 
       opacity: 0; 
-      /* МЕДЛЕННОЕ ПЛАВНОЕ РАСТВОРЕНИЕ (2 СЕКУНДЫ) */
       transition: opacity 2s ease-in-out; 
       display: flex; 
       justify-content: center; 
@@ -32,49 +29,82 @@
       width: 100%; 
       height: 100%; 
       object-fit: cover; 
-      /* ЭФФЕКТ МЕДЛЕННОГО НАЕЗДА КАМЕРЫ */
       transform: scale(1);
       transition: transform 7s ease-in-out;
     }
 
-    /* Когда слайд активен, картинка начинает медленно увеличиваться */
-    .slide.active img {
-      transform: scale(1.08);
+    .slide.active img { transform: scale(1.08); }
+
+    /* СТИЛИ ДЛЯ СКРИМЕРА */
+    .screamer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent; /* Без фона вокруг скримера */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999; /* Поверх всех остальных картинок */
+      opacity: 0;
+      pointer-events: none; /* Чтобы не мешал кликать, когда скрыт */
+    }
+
+    /* Когда скример активируется */
+    .screamer-overlay.show {
+      opacity: 1;
+    }
+
+    /* Картинка скримера чуть меньше экрана */
+    .screamer-overlay img {
+      max-width: 85%;  /* Размер скримера (85% от ширины экрана) */
+      max-height: 85%; /* Размер скримера (85% от высоты экрана) */
+      object-fit: contain;
     }
   </style>
 </head>
 <body>
 
-  <div class="slider-container">
+  <div class="slider-container" id="slider">
 
     <!-- СЛАЙД 1 -->
     <div class="slide active">
-      <img src="НовыйХолст4ываываываывфывlllgfdgfgфывыфвфывыфвфывфывыфваыфва.png" alt="Арт 1">
+      <img src="СЮДА_ПИШИ_НАЗВАНИЕ_ПЕРВОЙ_КАРТИНКИ.jpg" alt="Арт 1">
     </div>
 
     <!-- СЛАЙД 2 -->
     <div class="slide">
-      <img src="НовыйХолст4ываываываывфывlllgfdgfgфывыфвфывыфвфывфывыфваыфвавыап.png" alt="Арт 2">
+      <img src="СЮДА_ПИШИ_НАЗВАНИЕ_ВТОРОЙ_КАРТИНКИ.png" alt="Арт 2">
     </div>
 
     <!-- СЛАЙД 3 -->
     <div class="slide">
-      <img src="НовыйХолст4ываываываывфывlllgfdgfgфывыфвфывыфвфывфывыфваыфвавыапфыв.png">
+      <img src="СЮДА_ПИШИ_НАЗВАНИЕ_ТРЕТЬЕЙ_КАРТИНКИ.jpg" alt="Арт 3">
     </div>
 
   </div>
 
+  <!-- БЛОК СКРИМЕРА (ПОЯВЛЯЕТСЯ ПРИ КЛИКЕ) -->
+  <div class="screamer-overlay" id="screamer">
+    <!-- СЮДА ВПИШИ НАЗВАНИЕ КАРТИНКИ ДЛЯ СКРИМЕРА: -->
+    <img src="СЮДА_ПИШИ_НАЗВАНИЕ_КАРТИНКИ_ДЛЯ_СКРИМЕРА.png" alt="Скример">
+  </div>
+
   <script>
     const slides = document.querySelectorAll('.slide');
-    let currentIndex = 0;
+    const slider = document.getElementById('slider');
+    const screamer = document.getElementById('screamer');
     
-    /* ВРЕМЯ ПОКАЗА: 7000 миллисекунд = 7 СЕКУНД (КАРТИНКА СМЕНЯЕТСЯ МЕДЛЕННЕЕ) */
-    const slideInterval = 7000; 
+    let currentIndex = 0;
+    const slideInterval = 7000; // 7 секунд на слайд
+    let autoSlideTimer = setInterval(nextSlide, slideInterval);
+    let isScreamerActive = false;
 
     function nextSlide() {
-      // Сбрасываем масштаб у уходящего слайда
-      const currentImg = slides[currentIndex].querySelector('img');
+      if (isScreamerActive) return; // Не листаем, пока горит скример
       
+      const currentImg = slides[currentIndex].querySelector('img');
       slides[currentIndex].classList.remove('active');
       if (currentImg) currentImg.style.transform = 'scale(1)';
 
@@ -82,7 +112,19 @@
       slides[currentIndex].classList.add('active');
     }
 
-    setInterval(nextSlide, slideInterval);
+    // ЛОГИКА КЛИКА ДЛЯ СКРИМЕРА
+    slider.addEventListener('click', () => {
+      if (isScreamerActive) return; // Если уже горит, повторно не активируем
+      
+      isScreamerActive = true;
+      screamer.classList.add('show'); // Показываем скример
+
+      // Ровно через 1 секунду (1000 миллисекунд) убираем скример
+      setTimeout(() => {
+        screamer.classList.remove('show');
+        isScreamerActive = false;
+      }, 1000); 
+    });
   </script>
 
 </body>
